@@ -56,10 +56,10 @@ double Function::Integrate(string variable_name, double a, double b, int n)
 		s2 += this->get(values);
 	}
 
-	map < string, double> values = { {variable_name, a} };
+       map < string, double> values_a = { {variable_name, a} };
+       map < string, double> values_b = { {variable_name, b} };
 
-	return (h / 3) * (this->get(values) + 4 * s2 + 2 * s1 + this->get(values));
-}
+       return (h / 3) * (this->get(values_a) + 4 * s2 + 2 * s1 + this->get(values_b));}
 
 //gives partial derivate for limit, variable and values specified
 double Function::PartialDerivative(map<string, double> variable_values, string variable_name, double limit)

@@ -71,12 +71,13 @@ double Function::PartialDerivative(map<string, double> variable_values, string v
 	if (limit > 0) {
 		//Implements the function as pd/dx = (f(n0, ..., nk+h, ..., nn) - f(n0, ..., nn))/h)
 		map<string, double> run_values = _variable_values;
-		map<string, double>::iterator itr = run_values.find(variable_name);
-		itr->second += limit;
-		double derivate = (this->get(run_values) - this->get(_variable_values)) / limit;
+		run_values[variable_name] = _variable_values[variable_name] + limit;
+		double value1 =  this->get(_variable_values);
+		double value2 = this->get(run_values);
+		double derivate = (value2 - value1) / limit;
 		return derivate;
 	}
-	return 0;
+	else { return 0; }
 }
 
 //Preprocess the string into vector to bve then compiled

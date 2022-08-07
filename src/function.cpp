@@ -37,30 +37,37 @@ double Function::get(map<string, double> variable_values)
 	return 0;
 };
 
-/* Works only on single variabe function */
 //Integrates the function with definite integral by Simpson's rule
-double Function::Integrate(string variable_name, double a, double b, int n)
+double Integrate(map<string, double> variable_val, string variable_name, double a, double b, int n)
 {
+	variable_values = variable_val;
+
+	CheckVariableValues();
+
 	if (n % 2 == 0) { n += 1; }
 
 	double h = (b - a) / (n - 1);
 	double s1 = 0;
 	double s2 = 0;
 
+	map<string, double> running_values = variable_values;
 	for (int i = 2; i < n - 2; i += 2) {
-		map < string, double> values = { {variable_name, a + i * h} };
-		s1 += this->get(values);
+		running_values[variable_name] = a + i * h;
+		s1 += this->get(running_values);
 	}
+	running_values = variable_values;
 	for (int i = 1; i < n - 1; i += 2) {
-		map < string, double> values = { {variable_name, a + i * h} };
-		s2 += this->get(values);
+		running_values[variable_name] = a + i * h;
+		s2 += this->get(running_values);
 	}
 
-       map < string, double> values_a = { {variable_name, a} };
-       map < string, double> values_b = { {variable_name, b} };
+	map < string, double> values_a = variable_values;
+	values_a[variable_name] = a;
+	map < string, double> values_b = variable_values;
+	values_b[variable_name] = b;
 
-       return (h / 3) * (this->get(values_a) + 4 * s2 + 2 * s1 + this->get(values_b));}
-
+	return (h / 3) * (this->get(values_a) + 4 * s2 + 2 * s1 + this->get(values_b));
+}
 //gives partial derivate for limit, variable and values specified
 double Function::PartialDerivative(map<string, double> variable_values, string variable_name, double limit)
 {

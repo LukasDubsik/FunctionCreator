@@ -38,9 +38,9 @@ double Function::get(map<string, double> variable_values)
 };
 
 //Integrates the function with definite integral by Simpson's rule
-double Integrate(map<string, double> variable_val, string variable_name, double a, double b, int n)
+double Function::Integrate(map<string, double> variable_values, string variable_name, double a, double b, int n)
 {
-	variable_values = variable_val;
+	_variable_values = variable_values;
 
 	CheckVariableValues();
 
@@ -50,20 +50,20 @@ double Integrate(map<string, double> variable_val, string variable_name, double 
 	double s1 = 0;
 	double s2 = 0;
 
-	map<string, double> running_values = variable_values;
+	map<string, double> running_values = _variable_values;
 	for (int i = 2; i < n - 2; i += 2) {
 		running_values[variable_name] = a + i * h;
 		s1 += this->get(running_values);
 	}
-	running_values = variable_values;
+	running_values = _variable_values;
 	for (int i = 1; i < n - 1; i += 2) {
 		running_values[variable_name] = a + i * h;
 		s2 += this->get(running_values);
 	}
 
-	map < string, double> values_a = variable_values;
+	map < string, double> values_a = _variable_values;
 	values_a[variable_name] = a;
-	map < string, double> values_b = variable_values;
+	map < string, double> values_b = _variable_values;
 	values_b[variable_name] = b;
 
 	return (h / 3) * (this->get(values_a) + 4 * s2 + 2 * s1 + this->get(values_b));

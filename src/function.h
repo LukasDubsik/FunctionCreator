@@ -16,7 +16,7 @@ public:
     Function(std::string function_definition, std::vector<std::string> variables);
 
     double get(map<string, double> variable_values);
-    double Integrate(string variable_name, double a, double b, int n);
+    double Integrate(map<string, double> variable_values, string variable_name, double a, double b, int n);
     double PartialDerivative(map<string, double> variable_values, string variable_name, double limit);
 
 private:

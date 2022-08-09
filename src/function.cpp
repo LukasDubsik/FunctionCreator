@@ -30,7 +30,7 @@ double Function::get(map<string, double> variable_values)
 	}
 	//If only constant or variable, returns its value
 	else {
-		double ret = EvaluateVariable(_definition[1], _definition[2]);
+		double ret = EvaluateVariable(_definition[0], _definition[1]);
 		return ret;
 	}
 

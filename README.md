@@ -7,10 +7,11 @@ is to serve mainly as a boilerplate code for further editing by user to serve it
 Below is the basic use of the class:
 ```cpp
 #include "function.h"
-
+int main(){
 Function func = Function("log(;sum(;var(;x;);con(;7;););)", vector<string> {"x"}); //declaring the class
 map<string, double> variable_values{ {"x", 7} }; //map to assigning values to variables
 double result = func.get(variable_values); //use the map to get the function value
+}
 ```
 There is also some basic, additional functionality than getting the value. this includes integrating and 
 derivating by one variable:
@@ -54,6 +55,30 @@ Function("sum(;con(;1.25;);var(;x;););", vector<string> {"x"}); //Here two parts
 These include all functions defined in *<math.h>*, examples are **sin(;, asin(;, log(;** and so on. Thses only need one value inside their definition.
 ``` cpp
 Function("log(var(;x;);)", vector<string> {"x"}); //Only one value inside the function definition
+```
+
+## Additional classes
+In addition to the basic class capable of creating functions during runtime there are also multiple supporting ones which use the main class as framework upon which they build.
+
+### VectorFunction
+Currently, there is only one such class, but others are being worked on: Vector Function class. It accepts three functions when being initiatized, one variable each. Excluding the basic functions, such as getting value or derivating, there also function like getting value from plane or size.
+``` cpp
+#include "function.h"
+int main() {
+Function func1 = Function("var(;t;)", vector<string> {"t"}); //declaring the class
+Function func2 = Function("sin(;var(;t;);)", vector<string> {"t"}); //declaring the class
+Function func3 = Function("con(;1;)", vector<string> {"t"}); //declaring the class
+    
+vector<Function> functions{ func1, func2, func3 }; //Vector of functions to be included in vector function
+
+VectorFunction funcv = VectorFunction(functions, "t"); //Initializing the vector function
+}
+```
+Below are examples of vector functions.
+```
+funcv.get(3); //Returns vector of vector function values
+funcv.SizeFunctionValue(1, 2) //Length of function between t=1 and t=2
+funcv.Derivate(3) //Retrurns derivate at t=3
 ```
 
 ## Dependencies

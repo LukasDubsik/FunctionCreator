@@ -46,4 +46,22 @@ protected:
     vector<string> _operators_variable{ "con(", "var(" };
 };
 
+class VectorFunction
+{
+public:
+    vector<Function> functions;
+    string variable_name;
+    int function_size;
+
+    VectorFunction(vector<Function> funcs, string var_name);
+
+    vector<double> get(double variable_value);
+    vector<double> Derivate(double variable_value);
+    double SizeFunctionValue(double a, double b, int n = 100);
+    double ValueToPlane(int type, double v_1, double v_2, double variable_value);
+
+private:
+    double CombineValues(double value);
+};
+
 #endif

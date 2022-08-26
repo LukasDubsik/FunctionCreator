@@ -274,3 +274,121 @@ double Function::Func(double value, string oper)
 	if (oper == "abs(") { return abs(value); }
 	return 0;
 }
+
+//Takes the functions necessary for init -> r(t) = f(t) + g(t) + h(t)
+//It is a good practice to name variable t, as it is often used
+//Bear in mind that function only takes class Functions of single variable
+VectorFunction::VectorFunction(vector<Function> funcs, string var_name)
+{
+	for (Function f : funcs) {
+		if (f.variable_values.size() > 1)
+		{
+			throw invalid_argument("Functions with single variable only!");
+		}
+	}
+
+	functions = funcs;
+	variable_name = var_name;
+	function_size = funcs.size();
+}
+
+vector<double> VectorFunction::get(double variable_value)
+{
+
+	vector<double> return_values;
+	map<string, double> values{ {variable_name, variable_value} };
+	for (Function func : functions)
+	{
+		return_values.emplace_back(func.get(values));
+	}
+
+	return return_values;
+}
+
+vector<double> VectorFunction::Derivate(double variable_value)
+{
+
+	vector<double> return_values;
+	map<string, double> values{ {variable_name, variable_value} };
+	for (Function func : functions)
+	{
+		return_values.emplace_back(func.PartialDerivative(values, variable_name));
+	}
+
+	return return_values;
+}
+
+double VectorFunction::CombineValues(double value)
+{
+
+	map<string, double> values = { {variable_name, value} };
+	double derivates = pow(functions[0].PartialDerivative(values, variable_name, 1e-10), 2) +
+		pow(functions[1].PartialDerivative(values, variable_name, 1e-10), 2) +
+		pow(functions[2].PartialDerivative(values, variable_name, 1e-10), 2);
+
+	return sqrt(derivates);
+}
+
+double VectorFunction::SizeFunctionValue(double a, double b, int n)
+{
+
+	if (n % 2 == 0) { n += 1; }
+
+	double h = (b - a) / (n - 1);
+	double s1 = 0;
+	double s2 = 0;
+	for (int i = 2; i < n - 2; i += 2) {
+		s1 += this->CombineValues(a + i * h);
+	}
+	for (int i = 1; i < n - 1; i += 2) {
+		s2 += this->CombineValues(a + i * h);
+	}
+
+	map < string, double> values_a = { {variable_name, a} };
+	map < string, double> values_b = { {variable_name, b} };
+
+	return (h / 3) * (CombineValues(a) + 4 * s2 + 2 * s1 + CombineValues(b));
+}
+//Function to get the z value from defined plane and x, y value; equation of the form r'(x) . (x - h) = 0, where r' is derivative of vector function, x random point on plane and h point on plane
+//The equation follows from this formula
+double VectorFunction::ValueToPlane(int type, double v_1, double v_2, double variable_value)
+{
+
+	//Get the value map
+	map<string, double> variable_values = { {variable_name, variable_value} };
+
+	if (type == 4)
+	{
+		double f_part = functions[0].PartialDerivative(variable_values, variable_name) * (v_1 - functions[0].get(variable_values));
+		//Assemble and get the final value
+		double final_value = functions[1].get(variable_values) - ((f_part) / functions[1].PartialDerivative(variable_values, variable_name));
+		return final_value;
+	}
+
+	else if (type == 5)
+	{
+		double f_part = functions[0].PartialDerivative(variable_values, variable_name) * (v_1 - functions[0].get(variable_values));
+		//Assemble and get the final value
+		double final_value = functions[2].get(variable_values) - ((f_part) / functions[2].PartialDerivative(variable_values, variable_name));
+		return final_value;
+	}
+
+	else if (type == 6)
+	{
+		double g_part = functions[1].PartialDerivative(variable_values, variable_name) * (v_2 - functions[1].get(variable_values));
+		//Assemble and get the final value
+		double final_value = functions[2].get(variable_values) - ((g_part) / functions[2].PartialDerivative(variable_values, variable_name));
+		return final_value;
+	}
+
+	else
+	{
+		//get the f function part
+		double f_part = functions[0].PartialDerivative(variable_values, variable_name) * (v_1 - functions[0].get(variable_values));
+		//get the g function part
+		double g_part = functions[1].PartialDerivative(variable_values, variable_name) * (v_2 - functions[1].get(variable_values));
+		//Assemble and get the final value
+		double final_value = functions[2].get(variable_values) - ((f_part + g_part) / functions[2].PartialDerivative(variable_values, variable_name));
+		return final_value;
+	}
+}

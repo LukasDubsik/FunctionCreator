@@ -15,9 +15,9 @@ double result = func.get(variable_values); //use the map to get the function val
 There is also some basic, additional functionality than getting the value. this includes integrating and 
 derivating by one variable:
 ```cpp
-double integrated = func.Integrate("x", 1, 2, 1e4); //Integrates the function using Simpson's method by one variable
+double integrated = func.Integrate(variable_values, "x", 2, 3, 1e4); //Integrates the function using Simpson's method by one variable
                                                     //Works only function with single variable
-double derivated = func.PartialDerivative(variable_values, "x", 1e-10); //Returns partial derivative of function
+double derivated = func.PartialDerivative(variable_values, "x"); //Returns partial derivative of function
 ```
 Function can also accept function with multiple variables:
 ```cpp

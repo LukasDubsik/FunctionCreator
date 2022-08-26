@@ -1,19 +1,19 @@
 #include "function.h"
 
 //Initializes the class and preprocesses the string into string vector
-Function::Function(std::string function_definition, std::vector<std::string> variables)
+Function::Function(std::string function_def, std::vector<std::string> variables)
 {
 	//Initializes private members of Function class
-	_function_definition = function_definition;
+	function_definition = function_def;
 	_variables = variables;
 	//Checks validity of given function and adds it to vector for easier evaluation
 	Preprocess();
 };
 
 //Gets the value of function for given variables
-double Function::get(map<string, double> variable_values)
+double Function::get(map<string, double> variable_val)
 {
-	_variable_values = variable_values;
+	variable_values = variable_val;
 
 	CheckVariableValues();
 
@@ -38,9 +38,10 @@ double Function::get(map<string, double> variable_values)
 };
 
 //Integrates the function with definite integral by Simpson's rule
-double Function::Integrate(map<string, double> variable_values, string variable_name, double a, double b, int n)
+double Function::Integrate(map<string, double> variable_val, string variable_name, double a, double b, int n)
 {
-	_variable_values = variable_values;
+
+	variable_values = variable_val;
 
 	CheckVariableValues();
 
@@ -50,38 +51,40 @@ double Function::Integrate(map<string, double> variable_values, string variable_
 	double s1 = 0;
 	double s2 = 0;
 
-	map<string, double> running_values = _variable_values;
+	map<string, double> running_values = variable_values;
 	for (int i = 2; i < n - 2; i += 2) {
 		running_values[variable_name] = a + i * h;
 		s1 += this->get(running_values);
 	}
-	running_values = _variable_values;
+	running_values = variable_values;
 	for (int i = 1; i < n - 1; i += 2) {
 		running_values[variable_name] = a + i * h;
 		s2 += this->get(running_values);
 	}
 
-	map < string, double> values_a = _variable_values;
+	map < string, double> values_a = variable_values;
 	values_a[variable_name] = a;
-	map < string, double> values_b = _variable_values;
+	map < string, double> values_b = variable_values;
 	values_b[variable_name] = b;
 
 	return (h / 3) * (this->get(values_a) + 4 * s2 + 2 * s1 + this->get(values_b));
 }
 //gives partial derivate for limit, variable and values specified
-double Function::PartialDerivative(map<string, double> variable_values, string variable_name, double limit)
+double Function::PartialDerivative(map<string, double> variable_val, string variable_name, double limit)
 {
-	_variable_values = variable_values;
+
+	variable_values = variable_val;
 
 	CheckVariableValues();
 	//Checks, that limit (in math mainly defined as h) is higher than zero
 	if (limit > 0) {
 		//Implements the function as pd/dx = (f(n0, ..., nk+h, ..., nn) - f(n0, ..., nn))/h)
-		map<string, double> run_values = _variable_values;
-		run_values[variable_name] = _variable_values[variable_name] + limit;
-		double value1 =  this->get(_variable_values);
+		map<string, double> run_values = variable_values;
+		run_values[variable_name] = variable_values[variable_name] + limit;
+		double value1 = this->get(variable_values);
 		double value2 = this->get(run_values);
 		double derivate = (value2 - value1) / limit;
+
 		return derivate;
 	}
 	else { return 0; }
@@ -105,7 +108,7 @@ void Function::Preprocess()
 	int separator_counter = 0;
 
 	// Read definition character by character and check validity
-	for (char character : _function_definition)
+	for (char character : function_definition)
 	{
 		if (character == ';') {
 			//Firstly tries to find if it is constant
@@ -118,7 +121,6 @@ void Function::Preprocess()
 					&& !FindInVector <string>(_operators_variable, running_string)
 					&& !FindInVector <string>(_variables, running_string)
 					&& running_string != ")") {
-					cout << running_string;
 					throw invalid_argument("Unknown element encountred at: " + separator_counter);
 				}
 			}
@@ -143,7 +145,7 @@ void Function::CheckVariableValues()
 	bool found = false;
 	for (string run_check : _variables)
 	{
-		for (auto map_var : _variable_values)
+		for (auto map_var : variable_values)
 		{
 			if (map_var.first == run_check) { found = true; }
 		}
@@ -165,7 +167,7 @@ double Function::EvaluateVariable(string type, string value)
 	//If constant, convert to string
 	if (type == "con(") { return std::stof(value); }
 	//If variable retrieve the value from private variable initiazed by public methods by user
-	else { return _variable_values[value]; }
+	else { return variable_values[value]; }
 	return 0;
 }
 //Evaluates and returns value of function if of basic type (two sides matter)

@@ -13,17 +13,18 @@ using namespace std;
 class Function
 {
 public:
-    Function(std::string function_definition, std::vector<std::string> variables);
+    std::map<string, double> variable_values;
+    std::string function_definition;
 
-    double get(map<string, double> variable_values);
-    double Integrate(map<string, double> variable_values, string variable_name, double a, double b, int n);
-    double PartialDerivative(map<string, double> variable_values, string variable_name, double limit);
+    Function(std::string function_def, std::vector<std::string> variables);
+
+    double get(map<string, double> variable_val);
+    double Integrate(map<string, double> variable_val, string variable_name, double a, double b, int n);
+    double PartialDerivative(map<string, double> variable_val, string variable_name, double limit = 1e-10);
 
 private:
-    std::string _function_definition;
     std::vector<std::string> _variables;
     std::vector<std::string> _definition;
-    std::map<string, double> _variable_values;
     int _definition_length;
 
     void Preprocess();

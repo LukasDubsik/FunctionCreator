@@ -83,3 +83,13 @@ funcv.Derivate(3) //Retrurns derivate at t=3
 
 ## Dependencies
 All dependencies are parts of the c++ standart library, so no additional installations are not necessary.
+
+# UDACITY ONLY
+This library is used only as add on library, as is not stand alone executable. Because of that it is not supposed to be run using cmake and make functionality or similar, but to be used together with another main program to be included (as the header file). I recommend running this library in visual studio or adding it to existing project and then running this project using cmake/make.
+
+## Rubric parts completed
+1. The program runs without errors and correctly, as is described above
+2. The project is organized into two classes, with multitude of both private and public functions included. The project doesn't used external files or does not write results into any other files. The input to the classes/functions is given when calling the function. The code is completely commented
+3. The project is organized into classes eith attributes and methods. All are specified as either public or private. Initialization is done through constructors. The header file is implemented and classes abstracted. Inheritance and override are not used, as deemed unnecesary. There is one template function.
+4. This part wasn't implemented at all, as during testing it was proven detrimental to the speed of program.
+5. This wasn't also implemented, as, once again, when testing this it proved the program slower, rather than faster.
